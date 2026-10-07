@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "ParkSmart",
+    "slug": "app-estacionamento",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "parksmart",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "pt.ipb.estig.parksmart"
+    },
+    "android": {
+      "package": "pt.ipb.estig.parksmart",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "A câmara é usada para ler os QR Codes de entrada e saída do parque."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O acesso às fotos é usado para definir a foto de perfil."
+        }
+      ],
+      "expo-notifications"
+    ]
+  }
+}

@@ -1,0 +1,92 @@
+rules_version = '2';
+
+// Regras de segurança do ParkSmart.
+// Papéis: utente, gestor (segurança/gestor) e admin. Gestores e administradores
+// estão associados a um parque (users/{uid}.parkId) — RNF0: vários parques.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isActive() { return signedIn() && me().status == 'ativo'; }
+    function isStaff() { return isActive() && (me().role == 'gestor' || me().role == 'admin'); }
+    function isAdmin() { return isActive() && me().role == 'admin'; }
+    function staffOf(parkId) { return isStaff() && me().parkId == parkId; }
+    function adminOf(parkId) { return isAdmin() && me().parkId == parkId; }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    // ---------- Utilizadores ----------
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isStaff());
+
+      // RFC0: auto-registo do utente (fica pendente). RFG0/RFA2: o admin cria contas no seu parque.
+      allow create: if (signedIn() && request.auth.uid == uid
+                        && request.resource.data.role == 'utente'
+                        && request.resource.data.status == 'pendente')
+                    || (isAdmin() && request.resource.data.role in ['gestor', 'utente']
+                        && request.resource.data.parkId == me().parkId);
+
+      allow update: if
+        // RFC5: o próprio altera os seus dados, mas não o papel/estado/parque
+        (signedIn() && request.auth.uid == uid && !changed().hasAny(['role', 'status', 'parkId', 'email']))
+        // RFG2: gestor valida/edita utentes do seu parque
+        || (staffOf(resource.data.parkId) && resource.data.role == 'utente'
+            && changed().hasOnly(['name', 'phone', 'status']))
+        // RFA2: admin gere utentes e gestores do seu parque
+        || (adminOf(resource.data.parkId) && resource.data.role != 'admin'
+            && request.resource.data.role == resource.data.role);
+
+      allow delete: if adminOf(resource.data.parkId) && resource.data.role != 'admin';
+    }
+
+    // ---------- Parques ----------
+    match /parks/{parkId} {
+      // leitura pública: o utente escolhe o parque no registo
+      allow read: if true;
+      allow update: if adminOf(parkId);          // RFA1, RFA4
+      allow create, delete: if false;            // via script de administração (RFA0)
+
+      match /spots/{spotId} {
+        allow read: if signedIn();
+        allow update: if staffOf(parkId);        // RFG1a
+        allow create, delete: if adminOf(parkId); // RFA1
+      }
+
+      // espelho público das reservas (sem dados pessoais) para calcular lugares livres
+      match /bookings/{reservationId} {
+        allow read: if signedIn();
+        allow create, update: if staffOf(parkId)
+          || (signedIn()
+              && getAfter(/databases/$(database)/documents/reservations/$(reservationId)).data.userId == request.auth.uid
+              && getAfter(/databases/$(database)/documents/reservations/$(reservationId)).data.parkId == parkId
+              && getAfter(/databases/$(database)/documents/reservations/$(reservationId)).data.spotId == request.resource.data.spotId
+              && getAfter(/databases/$(database)/documents/reservations/$(reservationId)).data.status == request.resource.data.status);
+        allow delete: if adminOf(parkId);
+      }
+
+      // RFA3: veículos que usaram o parque (registados na entrada)
+      match /vehicles/{plate} {
+        allow read, write: if staffOf(parkId);
+      }
+    }
+
+    // ---------- Reservas ----------
+    match /reservations/{id} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || staffOf(resource.data.parkId));
+
+      allow create: if isActive()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'reservada'
+        && request.resource.data.entries.size() == 0;
+
+      allow update: if staffOf(resource.data.parkId)
+        || (resource.data.userId == request.auth.uid
+            && changed().hasOnly(['start', 'end', 'spotId', 'spotCode', 'payments', 'status', 'updatedAt'])
+            && (request.resource.data.status == resource.data.status
+                || (resource.data.status == 'reservada' && request.resource.data.status == 'cancelada')
+                || (resource.data.kind == 'avenca' && resource.data.status == 'concluida' && request.resource.data.status == 'reservada')));
+
+      allow delete: if adminOf(resource.data.parkId); // RFA5
+    }
+  }
+}
