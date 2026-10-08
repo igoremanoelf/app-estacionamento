@@ -46,7 +46,7 @@ export function ReservationsScreen() {
               { value: 'todas', label: 'Todas' },
             ]}
           />
-          <TextField label="Pesquisar" placeholder="Matrícula, nome ou lugar" value={search} onChangeText={setSearch} />
+          <TextField label="Pesquisar" placeholder="Matrícula, nome ou lugar" value={search} onChangeText={setSearch} icon="search-outline" />
         </View>
       }
       renderItem={({ item }) => <ReservationCard reservation={item} showUser onPress={() => navigation.navigate('ManageReservation', { id: item.id })} />}

@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { useMemo, useState } from 'react';
 import { SectionList, StyleSheet, Text, View } from 'react-native';
-import { EmptyState, Loading, Segmented } from '../../components/Misc';
+import { EmptyState, IconChip, Loading, Segmented } from '../../components/Misc';
 import { ReservationCard } from '../../components/ReservationCard';
 import { useProfile } from '../../context/AuthContext';
 import { useUserReservations } from '../../hooks/data';
-import { colors, spacing } from '../../theme';
+import { colors, fonts, spacing } from '../../theme';
 import { formatMoney } from '../../utils/dates';
 import { totalPaid } from '../../utils/pricing';
 
@@ -36,7 +36,7 @@ export function HistoryScreen() {
   return (
     <SectionList
       style={{ backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: spacing.lg, gap: spacing.sm }}
+      contentContainerStyle={{ padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xxl }}
       sections={sections}
       keyExtractor={(r) => r.id}
       ListHeaderComponent={
@@ -52,8 +52,11 @@ export function HistoryScreen() {
       }
       renderSectionHeader={({ section }) => (
         <View style={styles.header}>
+          <IconChip name="car-sport" size={36} />
           <Text style={styles.plate}>{section.plate}</Text>
-          <Text style={styles.total}>Total pago: {formatMoney(section.total)}</Text>
+          <View style={styles.totalPill}>
+            <Text style={styles.total}>{formatMoney(section.total)} pagos</Text>
+          </View>
         </View>
       )}
       renderItem={({ item }) => <ReservationCard reservation={item} showPark onPress={() => navigation.navigate('ReservationDetail', { id: item.id })} />}
@@ -64,7 +67,8 @@ export function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: spacing.lg },
-  plate: { fontSize: 18, fontWeight: '800', color: colors.text, letterSpacing: 1 },
-  total: { color: colors.textMuted, fontWeight: '600' },
+  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm + 2, marginTop: spacing.lg },
+  plate: { flex: 1, fontSize: 17, fontFamily: fonts.extrabold, color: colors.text, letterSpacing: 1 },
+  totalPill: { backgroundColor: colors.successLight, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 5 },
+  total: { color: colors.success, fontFamily: fonts.semibold, fontSize: 12 },
 });

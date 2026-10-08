@@ -9,7 +9,7 @@ import { useCurrentPark } from '../../context/ParkContext';
 import { errorMessage } from '../../services/auth';
 import { updatePrices } from '../../services/parks';
 import { VEHICLE_TYPES, type Prices } from '../../types';
-import { colors, spacing } from '../../theme';
+import { colors, fonts, spacing } from '../../theme';
 
 type Field = keyof Prices;
 const FIELDS: { key: Field; label: string }[] = [
@@ -79,5 +79,5 @@ export function PricesScreen() {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: spacing.sm },
-  muted: { color: colors.textMuted, fontSize: 12 },
+  muted: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 12 },
 });

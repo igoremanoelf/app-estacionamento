@@ -15,7 +15,7 @@ import { errorMessage } from '../../services/auth';
 import { processGateScan } from '../../services/gate';
 import { sendPushToUser } from '../../services/notifications';
 import { addExtraCharge, cancelReservation, markPaidByStaff, staffUpdateReservation } from '../../services/reservations';
-import { colors, radius, spacing } from '../../theme';
+import { colors, fonts, radius, spacing } from '../../theme';
 import { busySpotIds } from '../../utils/availability';
 import { formatDateTime, formatMoney, HOUR } from '../../utils/dates';
 import { totalPaid, totalPending } from '../../utils/pricing';
@@ -97,7 +97,7 @@ export function ManageReservationScreen({ route }: RootScreenProps<'ManageReserv
 
   return (
     <Screen>
-      <Card title={`${r.plate} · ${r.spotCode}`} right={<StatusBadge status={r.status} />}>
+      <Card title={`${r.plate} · ${r.spotCode}`} icon="car-sport-outline" right={<StatusBadge status={r.status} />}>
         <InfoRow label="Tipo" value={KIND_LABEL[r.kind]} />
         <InfoRow label="Utente" value={r.userName} />
         {owner?.phone ? (
@@ -121,7 +121,7 @@ export function ManageReservationScreen({ route }: RootScreenProps<'ManageReserv
       )}
 
       {active && (
-        <Card title="Alterar reserva">
+        <Card title="Alterar reserva" icon="create-outline">
           {r.kind !== 'imediata' && <DateTimeField label="Nova hora de saída" value={end} minimumDate={r.start.toDate()} onChange={setEnd} />}
           <Text style={styles.label}>Lugar ({freeSpots.length} disponíveis para o período)</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: spacing.sm }}>
@@ -135,19 +135,19 @@ export function ManageReservationScreen({ route }: RootScreenProps<'ManageReserv
         </Card>
       )}
 
-      <Card title="Emitir pagamento extra">
+      <Card title="Emitir pagamento extra" icon="add-circle-outline">
         <View style={{ flexDirection: 'row', gap: spacing.sm }}>
           <View style={{ flex: 1 }}>
-            <TextField label="Valor (€)" value={amount} onChangeText={setAmount} keyboardType="decimal-pad" placeholder="0,00" />
+            <TextField label="Valor (€)" value={amount} onChangeText={setAmount} keyboardType="decimal-pad" placeholder="0,00" icon="cash-outline" />
           </View>
           <View style={{ flex: 2 }}>
-            <TextField label="Motivo" value={note} onChangeText={setNote} placeholder="Ex.: ocupação de lugar alheio" />
+            <TextField label="Motivo" value={note} onChangeText={setNote} placeholder="Ex.: ocupação de lugar alheio" icon="chatbox-ellipses-outline" />
           </View>
         </View>
         <AppButton title="Emitir" icon="receipt-outline" variant="secondary" loading={busy === 'charge'} onPress={charge} disabled={!amount} />
       </Card>
 
-      <Card title="Pagamentos">
+      <Card title="Pagamentos" icon="wallet-outline">
         <PaymentList payments={r.payments} />
         {pending > 0 && (
           <AppButton title="Marcar como pago (recebido na caixa)" variant="success" icon="cash-outline" loading={busy === 'paid'} onPress={() => run('paid', () => markPaidByStaff(r), 'Pagamentos registados.')} />
@@ -185,8 +185,8 @@ export function ManageReservationScreen({ route }: RootScreenProps<'ManageReserv
 }
 
 const styles = StyleSheet.create({
-  label: { fontSize: 13, fontWeight: '600', color: colors.textMuted },
+  label: { fontSize: 13, fontFamily: fonts.semibold, color: colors.textMuted },
   spot: { borderWidth: 1.5, borderColor: colors.primary, borderRadius: radius.sm, paddingHorizontal: 14, paddingVertical: 8 },
   spotActive: { backgroundColor: colors.primary },
-  spotText: { fontWeight: '700', color: colors.primary },
+  spotText: { fontFamily: fonts.bold, color: colors.primary },
 });

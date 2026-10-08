@@ -11,7 +11,7 @@ import { useCurrentPark } from '../../context/ParkContext';
 import { useParkReservations } from '../../hooks/data';
 import { errorMessage } from '../../services/auth';
 import { processGateScan, type GateResult } from '../../services/gate';
-import { colors, radius, spacing } from '../../theme';
+import { colors, fonts, radius, spacing } from '../../theme';
 import { normalizePlate } from '../../utils/plate';
 import { buildQrPayload } from '../../utils/token';
 
@@ -73,7 +73,7 @@ export function ScanScreen() {
       </View>
       {result && <AppButton title="Ler outro código" icon="scan-outline" onPress={() => setResult(null)} />}
 
-      <Card title="Sem QR Code? Procurar por matrícula">
+      <Card title="Sem QR Code? Procurar por matrícula" icon="search-outline">
         <TextField label="Matrícula" value={plate} onChangeText={(t) => setPlate(t.toUpperCase())} autoCapitalize="characters" placeholder="AA-00-BB" />
         <AppButton title="Registar entrada/saída" variant="secondary" icon="swap-horizontal-outline" onPress={byPlate} disabled={!plate || !!result} />
       </Card>
@@ -85,6 +85,6 @@ const styles = StyleSheet.create({
   cameraBox: { height: 340, borderRadius: radius.lg, overflow: 'hidden', backgroundColor: '#111' },
   center: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center', gap: spacing.md, padding: spacing.xl },
   white: { color: '#fff', textAlign: 'center' },
-  resultTitle: { color: '#fff', fontSize: 20, fontWeight: '800' },
+  resultTitle: { color: '#fff', fontSize: 20, fontFamily: fonts.extrabold },
   frame: { position: 'absolute', top: 60, left: 60, right: 60, bottom: 60, borderWidth: 3, borderColor: '#fff', borderRadius: radius.lg },
 });

@@ -34,15 +34,15 @@ export function StatsScreen() {
         <StatTile label="Permanência média" value={s.avgStayMinutes ? formatDuration(s.avgStayMinutes * 60_000) : '—'} color={colors.warning} />
       </View>
 
-      <Card title="Receita dos últimos 7 dias">
+      <Card title="Receita dos últimos 7 dias" icon="cash-outline">
         <BarChart data={s.revenueLast7} color={colors.success} format={(v) => `${Math.round(v)}€`} />
       </Card>
 
-      <Card title="Entradas por hora do dia">
+      <Card title="Entradas por hora do dia" icon="bar-chart-outline">
         <BarChart data={s.entriesByHour.map((v, h) => ({ label: `${h}h`, value: v }))} showEveryLabel={3} />
       </Card>
 
-      <Card title="Reservas por tipo">
+      <Card title="Reservas por tipo" icon="pie-chart-outline">
         {(Object.keys(s.byKind) as ReservationKind[]).map((k) => (
           <View key={k} style={{ gap: 4 }}>
             <InfoRow label={KIND_LABEL[k]} value={String(s.byKind[k])} />
@@ -51,14 +51,14 @@ export function StatsScreen() {
         ))}
       </Card>
 
-      <Card title="Lugares mais usados">
+      <Card title="Lugares mais usados" icon="trophy-outline">
         {s.topSpots.length === 0 && <InfoRow label="Sem dados" value="—" />}
         {s.topSpots.map((t) => (
           <InfoRow key={t.code} label={t.code} value={`${t.count} reserva(s)`} />
         ))}
       </Card>
 
-      <Card title="Lugares">
+      <Card title="Lugares" icon="grid-outline">
         <InfoRow label="Total" value={String(s.totalSpots)} />
         <InfoRow label="Ativos" value={String(s.activeSpots)} />
         <InfoRow label="Desativados" value={String(s.totalSpots - s.activeSpots)} />

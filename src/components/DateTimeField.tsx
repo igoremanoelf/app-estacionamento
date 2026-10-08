@@ -2,7 +2,7 @@ import DateTimePicker, { DateTimePickerAndroid, type DateTimePickerEvent } from 
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 import { formatDate, formatDateTime } from '../utils/dates';
 
 interface Props {
@@ -67,17 +67,16 @@ export function DateTimeField({ label, value, onChange, mode = 'datetime', minim
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: spacing.xs, flex: 1 },
-  label: { fontSize: 13, fontWeight: '600', color: colors.textMuted },
+  wrap: { gap: 6, flex: 1 },
+  label: { fontSize: 13, fontFamily: fonts.semibold, color: colors.text, marginLeft: 2 },
   field: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
+    backgroundColor: colors.surfaceAlt,
     borderRadius: radius.md,
-    padding: spacing.md,
+    paddingHorizontal: spacing.md + 2,
+    minHeight: 52,
   },
-  value: { fontSize: 15, color: colors.text, fontWeight: '600' },
+  value: { fontSize: 15, color: colors.text, fontFamily: fonts.semibold },
 });

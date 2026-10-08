@@ -14,7 +14,7 @@ import { errorMessage } from '../../services/auth';
 import { sendPushToUser } from '../../services/notifications';
 import { setUserStatus, updateUserByStaff } from '../../services/users';
 import type { AccountStatus } from '../../types';
-import { colors, spacing } from '../../theme';
+import { colors, fonts, spacing } from '../../theme';
 import { formatMoney } from '../../utils/dates';
 import { totalPaid } from '../../utils/pricing';
 
@@ -86,9 +86,9 @@ export function UserEditScreen({ route }: RootScreenProps<'UserEdit'>) {
       </View>
 
       {canEdit && (
-        <Card title="Editar perfil">
-          <TextField label="Nome" value={name} onChangeText={setName} />
-          <TextField label="Telemóvel" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+        <Card title="Editar perfil" icon="create-outline">
+          <TextField label="Nome" value={name} onChangeText={setName} icon="person-outline" />
+          <TextField label="Telemóvel" value={phone} onChangeText={setPhone} keyboardType="phone-pad" icon="call-outline" />
           <AppButton
             title="Guardar"
             icon="save-outline"
@@ -99,7 +99,7 @@ export function UserEditScreen({ route }: RootScreenProps<'UserEdit'>) {
       )}
 
       {user.role === 'utente' && (
-        <Card title="Atividade neste parque">
+        <Card title="Atividade neste parque" icon="pulse-outline">
           <InfoRow label="Reservas" value={String(theirs.length)} />
           <InfoRow label="Total pago" value={formatMoney(theirs.reduce((s, r) => s + totalPaid(r.payments), 0))} />
           <InfoRow label="Veículos" value={(user.vehicles ?? []).map((v) => v.plate).join(', ') || '—'} />
@@ -111,6 +111,6 @@ export function UserEditScreen({ route }: RootScreenProps<'UserEdit'>) {
 
 const styles = StyleSheet.create({
   header: { alignItems: 'center', gap: spacing.sm },
-  name: { fontSize: 20, fontWeight: '800', color: colors.text },
+  name: { fontSize: 20, fontFamily: fonts.extrabold, color: colors.text },
   muted: { color: colors.textMuted },
 });

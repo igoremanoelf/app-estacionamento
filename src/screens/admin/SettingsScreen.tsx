@@ -1,9 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View } from 'react-native';
 import { AppButton } from '../../components/AppButton';
+import { Logo } from '../../components/Logo';
 import { ListItem, SectionTitle } from '../../components/Misc';
 import { Screen } from '../../components/Screen';
 import { useCurrentPark } from '../../context/ParkContext';
 import { logout } from '../../services/auth';
+import { colors, radius, shadows, spacing } from '../../theme';
 
 /** Menu de gestão do administrador. */
 export function SettingsScreen() {
@@ -11,7 +14,10 @@ export function SettingsScreen() {
   const { park } = useCurrentPark();
   return (
     <Screen>
-      <SectionTitle>{park?.name ?? 'Parque'}</SectionTitle>
+      <View style={styles.brand}>
+        <Logo size={44} tagline={park?.name ?? 'Gestão do parque'} />
+      </View>
+      <SectionTitle>Parque</SectionTitle>
       <ListItem icon="business-outline" title="Configurar parque" subtitle="Nome, horário e lugares" onPress={() => navigation.navigate('ParkSettings')} />
       <ListItem icon="pricetags-outline" title="Preços" subtitle="Preço por hora e avenças mensais" onPress={() => navigation.navigate('Prices')} />
       <ListItem icon="car-outline" title="Veículos" subtitle="Todos os veículos que usaram o parque" onPress={() => navigation.navigate('Vehicles')} />
@@ -26,3 +32,7 @@ export function SettingsScreen() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  brand: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.lg, ...shadows.sm },
+});

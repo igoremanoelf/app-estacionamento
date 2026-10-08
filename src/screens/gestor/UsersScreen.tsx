@@ -9,7 +9,7 @@ import { TextField } from '../../components/TextField';
 import { useProfile } from '../../context/AuthContext';
 import { useUsers } from '../../hooks/data';
 import type { AccountStatus } from '../../types';
-import { colors, radius, spacing } from '../../theme';
+import { colors, fonts, radius, spacing } from '../../theme';
 
 /**
  * RFG2: o gestor valida e edita contas de utentes.
@@ -69,7 +69,7 @@ export function UsersScreen() {
               { value: 'bloqueado', label: `Bloqueados (${count('bloqueado')})` },
             ]}
           />
-          <TextField label="Pesquisar" placeholder="Nome, email ou telemóvel" value={search} onChangeText={setSearch} />
+          <TextField label="Pesquisar" placeholder="Nome, email ou telemóvel" value={search} onChangeText={setSearch} icon="search-outline" />
         </View>
       }
       renderItem={({ item }) => (
@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  name: { fontWeight: '700', color: colors.text },
-  muted: { color: colors.textMuted, fontSize: 12 },
+  name: { fontFamily: fonts.bold, color: colors.text },
+  muted: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 12 },
 });

@@ -25,7 +25,7 @@ export function VehicleHistoryScreen({ route }: RootScreenProps<'VehicleHistory'
       data={list}
       keyExtractor={(r) => r.id}
       ListHeaderComponent={
-        <Card title="Resumo">
+        <Card title="Resumo" icon="receipt-outline">
           <InfoRow label="Reservas" value={String(list.length)} />
           <InfoRow label="Entradas" value={String(entries)} />
           <InfoRow label="Total pago" value={formatMoney(list.reduce((s, r) => s + totalPaid(r.payments), 0))} />

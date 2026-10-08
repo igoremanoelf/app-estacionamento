@@ -14,7 +14,7 @@ import type { RootScreenProps } from '../../navigation/types';
 import { errorMessage } from '../../services/auth';
 import { createReservation, editReservation, quote, validateOpeningHours } from '../../services/reservations';
 import type { VehicleType } from '../../types';
-import { colors, spacing } from '../../theme';
+import { colors, fonts, spacing } from '../../theme';
 import { spotStates } from '../../utils/availability';
 import { formatDateTime, formatDuration, formatMoney, HOUR, monthBounds, monthLabel, openingHoursLabel } from '../../utils/dates';
 import { isValidPlate } from '../../utils/plate';
@@ -132,7 +132,7 @@ export function ReserveScreen({ route, navigation }: RootScreenProps<'Reserve'>)
 
   return (
     <Screen>
-      <Card title="Veículo">
+      <Card title="Veículo" icon="car-outline">
         {existing ? (
           <InfoRow label="Matrícula" value={existing.plate} strong />
         ) : (
@@ -140,7 +140,7 @@ export function ReserveScreen({ route, navigation }: RootScreenProps<'Reserve'>)
         )}
       </Card>
 
-      <Card title={kind === 'avenca' ? 'Período de vigência' : 'Período'}>
+      <Card title={kind === 'avenca' ? 'Período de vigência' : 'Período'} icon="calendar-outline">
         <Text style={styles.muted}>
           {park.name} · {openingHoursLabel(park)}
         </Text>
@@ -179,7 +179,7 @@ export function ReserveScreen({ route, navigation }: RootScreenProps<'Reserve'>)
         {!!periodError && <Banner tone="warning" text={periodError} />}
       </Card>
 
-      <Card title="Escolha o lugar" right={<Text style={styles.muted}>{freeCount} livres</Text>}>
+      <Card title="Escolha o lugar" icon="grid-outline" right={<Text style={styles.muted}>{freeCount} livres</Text>}>
         {inside && <Banner text="O veículo está no parque: só pode prolongar a hora de saída." />}
         <ParkMap
           spots={spots}
@@ -190,7 +190,7 @@ export function ReserveScreen({ route, navigation }: RootScreenProps<'Reserve'>)
         />
       </Card>
 
-      <Card title="Resumo">
+      <Card title="Resumo" icon="receipt-outline">
         <InfoRow label="Lugar" value={spot?.code ?? '—'} />
         <InfoRow label={kind === 'avenca' ? 'Preço da avença' : 'Preço'} value={formatMoney(price)} strong />
         {existing && <InfoRow label="Diferença a pagar" value={formatMoney(price - paidBefore)} />}
@@ -213,5 +213,5 @@ export function ReserveScreen({ route, navigation }: RootScreenProps<'Reserve'>)
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: spacing.sm },
-  muted: { color: colors.textMuted, fontSize: 13 },
+  muted: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 13 },
 });

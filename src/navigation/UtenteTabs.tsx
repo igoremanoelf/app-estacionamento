@@ -15,10 +15,10 @@ export function UtenteTabs() {
   useUtenteNotifications(profile.id);
   return (
     <Tab.Navigator screenOptions={tabScreenOptions}>
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Início', tabBarIcon: tabIcon('home') }} />
-      <Tab.Screen name="ParkView" component={ParkViewScreen} options={{ title: 'Parque', tabBarIcon: tabIcon('grid') }} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Início', headerShown: false, tabBarIcon: tabIcon('home') }} />
+      <Tab.Screen name="ParkView" component={ParkViewScreen} options={{ title: 'Mapa do parque', tabBarLabel: 'Parque', tabBarIcon: tabIcon('grid') }} />
       <Tab.Screen name="History" component={HistoryScreen} options={{ title: 'Histórico', tabBarIcon: tabIcon('time') }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil', tabBarIcon: tabIcon('person') }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil', headerShown: false, tabBarIcon: tabIcon('person') }} />
     </Tab.Navigator>
   );
 }

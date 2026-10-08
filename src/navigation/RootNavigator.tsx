@@ -1,9 +1,9 @@
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, type Theme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../context/AuthContext';
 import { ParkProvider } from '../context/ParkContext';
 import { Loading } from '../components/Misc';
-import { colors } from '../theme';
+import { colors, fonts } from '../theme';
 import type { RootStackParams } from './types';
 import { UtenteTabs } from './UtenteTabs';
 import { GestorTabs } from './GestorTabs';
@@ -29,7 +29,16 @@ import { ResetHistoryScreen } from '../screens/admin/ResetHistoryScreen';
 
 const Stack = createNativeStackNavigator<RootStackParams>();
 
-const theme = { ...DefaultTheme, colors: { ...DefaultTheme.colors, primary: colors.primary, background: colors.background } };
+const theme: Theme = {
+  ...DefaultTheme,
+  colors: { ...DefaultTheme.colors, primary: colors.primary, background: colors.background, card: colors.surface, text: colors.text, border: colors.border, notification: colors.danger },
+  fonts: {
+    regular: { fontFamily: fonts.regular, fontWeight: 'normal' },
+    medium: { fontFamily: fonts.medium, fontWeight: 'normal' },
+    bold: { fontFamily: fonts.semibold, fontWeight: 'normal' },
+    heavy: { fontFamily: fonts.bold, fontWeight: 'normal' },
+  },
+};
 
 /**
  * Navegação principal: um Stack nativo na raiz (ecrãs de detalhe/formulários)
@@ -41,9 +50,13 @@ export function RootNavigator() {
   if (loading) return <Loading label="A carregar..." />;
 
   const screenOptions = {
-    headerTintColor: colors.primary,
-    headerTitleStyle: { color: colors.text },
+    headerTintColor: colors.text,
+    headerTitleStyle: { color: colors.text, fontFamily: fonts.bold, fontSize: 17 },
+    headerStyle: { backgroundColor: colors.background },
+    headerShadowVisible: false,
     headerBackTitle: 'Voltar',
+    headerBackTitleStyle: { fontFamily: fonts.medium },
+    contentStyle: { backgroundColor: colors.background },
   };
 
   if (!user || !profile) {
@@ -51,7 +64,7 @@ export function RootNavigator() {
       <NavigationContainer theme={theme}>
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Criar conta' }} />
+          <Stack.Screen name="Register" component={RegisterScreen} options={{ title: '', headerTransparent: true }} />
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -96,7 +109,7 @@ export function RootNavigator() {
               <Stack.Screen name="ResetHistory" component={ResetHistoryScreen} options={{ title: 'Histórico de reservas' }} />
             </Stack.Group>
           )}
-          <Stack.Screen name="MyProfile" component={ProfileScreen} options={{ title: 'O meu perfil' }} />
+          <Stack.Screen name="MyProfile" component={ProfileScreen} options={{ title: '', headerTransparent: true, headerTintColor: '#fff' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </ParkProvider>

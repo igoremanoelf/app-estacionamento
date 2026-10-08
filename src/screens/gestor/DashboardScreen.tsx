@@ -3,12 +3,14 @@ import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '../../components/AppButton';
 import { Card } from '../../components/Card';
-import { ProgressBar, StatTile } from '../../components/Charts';
-import { Banner, InfoRow, Loading } from '../../components/Misc';
+import { ProgressRing, StatTile } from '../../components/Charts';
+import { HeroHeader, HeroPill } from '../../components/Hero';
+import { Banner, Divider, InfoRow, Loading } from '../../components/Misc';
+import { ProfileHeaderButton } from '../../navigation/tabIcon';
 import { Screen } from '../../components/Screen';
 import { useCurrentPark } from '../../context/ParkContext';
 import { useNow, useParkReservations, useSpots } from '../../hooks/data';
-import { colors, spacing } from '../../theme';
+import { colors, fonts, gradients, radius, spacing } from '../../theme';
 import { computeAlerts } from '../../utils/alerts';
 import { formatDuration, formatTime, HOUR, openingHoursLabel } from '../../utils/dates';
 
@@ -36,39 +38,64 @@ export function DashboardScreen() {
   const upcoming = reservations.filter((r) => r.status === 'reservada' && r.start.toDate() > now && r.start.toMillis() - now.getTime() < 3 * HOUR);
   const freeingIn = (h: number) => inside.filter((r) => r.end && r.end.toMillis() - now.getTime() <= h * HOUR).length;
 
+  const ratio = occupied / Math.max(1, active);
+  const header = (
+    <HeroHeader overline="Painel do parque" title={park.name} right={<ProfileHeaderButton light />}>
+      <View style={styles.glass}>
+        <ProgressRing
+          value={ratio}
+          size={96}
+          stroke={10}
+          colors={ratio > 0.85 ? gradients.danger : gradients.brand}
+          track="rgba(255,255,255,0.12)"
+          textColor="#fff"
+          label="ocupado"
+        />
+        <View style={{ flex: 1, gap: 6 }}>
+          <Text style={styles.big}>
+            {occupied}
+            <Text style={styles.of}> / {active} ocupados</Text>
+          </Text>
+          <Text style={styles.heroMuted}>{active - occupied} lugares livres agora</Text>
+          <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap' }}>
+            <HeroPill>{openingHoursLabel(park)}</HeroPill>
+            {alerts.length > 0 && <HeroPill tone="danger">{`${alerts.length} alerta(s)`}</HeroPill>}
+          </View>
+        </View>
+      </View>
+    </HeroHeader>
+  );
+
   return (
-    <Screen>
-      <Text style={styles.title}>{park.name}</Text>
-      <Text style={styles.muted}>{openingHoursLabel(park)}</Text>
+    <Screen header={header}>
+      <View style={styles.tiles}>
+        <StatTile label="Livres" value={String(active - occupied)} hint="neste momento" color={colors.spotFree} icon="checkmark-circle" />
+        <StatTile label="A chegar" value={String(upcoming.length)} hint="próximas 3h" color={colors.primary} icon="enter" />
+      </View>
+      <View style={styles.tiles}>
+        <StatTile label="A sair" value={String(freeingIn(1))} hint="na próxima hora" color={colors.warning} icon="exit" />
+        <StatTile label="Alertas" value={String(alerts.length)} hint="incumprimentos" color={colors.danger} icon="warning" />
+      </View>
       {alerts.length > 0 && <Banner tone="danger" text={`${alerts.length} alerta(s) de incumprimento. Toque em "Alertas".`} />}
 
-      <View style={styles.tiles}>
-        <StatTile label="Ocupados" value={`${occupied}/${active}`} hint="lugares ativos" color={colors.spotOccupied} />
-        <StatTile label="Livres" value={String(active - occupied)} hint="neste momento" color={colors.spotFree} />
-      </View>
-      <View style={styles.tiles}>
-        <StatTile label="A chegar" value={String(upcoming.length)} hint="próximas 3h" color={colors.warning} />
-        <StatTile label="Alertas" value={String(alerts.length)} hint="incumprimentos" color={colors.danger} />
-      </View>
-
-      <Card title="Ocupação">
-        <ProgressBar value={active ? occupied / active : 0} color={occupied / Math.max(1, active) > 0.85 ? colors.danger : colors.primary} />
-        <Text style={styles.muted}>{Math.round((occupied / Math.max(1, active)) * 100)}% ocupado</Text>
-      </Card>
-
-      <Card title="Previsão de desocupação">
+      <Card title="Previsão de desocupação" icon="hourglass-outline">
         <InfoRow label="Na próxima hora" value={`${freeingIn(1)} lugar(es)`} />
         <InfoRow label="Nas próximas 3 horas" value={`${freeingIn(3)} lugar(es)`} />
         <InfoRow label="Sem hora de saída prevista" value={`${inside.filter((r) => !r.end || r.kind === 'avenca').length}`} />
+        {inside.length > 0 && <Divider />}
         {inside.slice(0, 8).map((r) => {
           const end = r.end?.toDate();
           const late = end && end < now;
           return (
-            <InfoRow
-              key={r.id}
-              label={`${r.spotCode} · ${r.plate}`}
-              value={!end || r.kind === 'imediata' ? 'indeterminado' : late ? `atrasado ${formatDuration(now.getTime() - end.getTime())}` : `${formatTime(end)} (em ${formatDuration(end.getTime() - now.getTime())})`}
-            />
+            <View key={r.id} style={styles.leaving}>
+              <View style={styles.spotChip}>
+                <Text style={styles.spotChipText}>{r.spotCode}</Text>
+              </View>
+              <Text style={styles.plate}>{r.plate}</Text>
+              <Text style={[styles.when, late && { color: colors.danger }]}>
+                {!end || r.kind === 'imediata' ? 'indeterminado' : late ? `atrasado ${formatDuration(now.getTime() - end.getTime())}` : `${formatTime(end)} · em ${formatDuration(end.getTime() - now.getTime())}`}
+              </Text>
+            </View>
           );
         })}
       </Card>
@@ -82,7 +109,23 @@ export function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  title: { fontSize: 22, fontWeight: '800', color: colors.text },
-  muted: { color: colors.textMuted },
-  tiles: { flexDirection: 'row', gap: spacing.sm },
+  glass: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.lg,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    backgroundColor: 'rgba(255,255,255,0.07)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  big: { fontFamily: fonts.extrabold, fontSize: 30, color: '#fff', letterSpacing: -1 },
+  of: { fontFamily: fonts.semibold, fontSize: 15, color: 'rgba(255,255,255,0.6)', letterSpacing: 0 },
+  heroMuted: { fontFamily: fonts.medium, fontSize: 13, color: 'rgba(255,255,255,0.65)', marginTop: -4 },
+  tiles: { flexDirection: 'row', gap: spacing.sm + 2 },
+  leaving: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm + 2 },
+  spotChip: { minWidth: 44, paddingHorizontal: 6, height: 30, borderRadius: 9, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' },
+  spotChipText: { fontFamily: fonts.bold, fontSize: 13, color: colors.primary },
+  plate: { fontFamily: fonts.semibold, fontSize: 14, color: colors.text, letterSpacing: 0.5, flex: 1 },
+  when: { fontFamily: fonts.medium, fontSize: 12.5, color: colors.textMuted },
 });
