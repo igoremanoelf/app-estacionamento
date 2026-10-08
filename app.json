@@ -9,10 +9,10 @@
     "scheme": "parksmart",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "pt.ipb.estig.parksmart"
+      "bundleIdentifier": "pt.upb.estig.parksmart"
     },
     "android": {
-      "package": "pt.ipb.estig.parksmart",
+      "package": "pt.upb.estig.parksmart",
       "adaptiveIcon": {
         "backgroundColor": "#3149DB",
         "foregroundImage": "./assets/android-icon-foreground.png",
