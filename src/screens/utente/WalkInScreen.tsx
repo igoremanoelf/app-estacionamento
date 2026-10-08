@@ -63,14 +63,14 @@ export function WalkInScreen({ navigation }: RootScreenProps<'WalkIn'>) {
   return (
     <Screen>
       {park && (
-        <Card title={park.name}>
+        <Card title={park.name} icon="location-outline">
           <InfoRow label="Horário" value={openingHoursLabel(park)} />
           <InfoRow label="Lugares disponíveis" value={candidate ? 'Sim' : 'Parque lotado'} />
           <InfoRow label="Preço" value={`${formatMoney(park.prices.hourly[vehicle.type])}/hora`} />
         </Card>
       )}
       {!open && <Banner tone="danger" text="O parque está fechado neste momento." />}
-      <Card title="Veículo">
+      <Card title="Veículo" icon="car-outline">
         <VehiclePicker saved={profile.vehicles ?? []} plate={vehicle.plate} type={vehicle.type} onChange={setVehicle} error={plateError} />
       </Card>
       <Banner tone="warning" text="O lugar é atribuído automaticamente e não pode ser alterado. O valor é calculado e notificado quando sair." />

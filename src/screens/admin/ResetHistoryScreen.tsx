@@ -9,7 +9,7 @@ import { useCurrentPark } from '../../context/ParkContext';
 import { useParkReservations } from '../../hooks/data';
 import { errorMessage } from '../../services/auth';
 import { resetHistory } from '../../services/reservations';
-import { colors } from '../../theme';
+import { colors, fonts } from '../../theme';
 import { addDays, formatDate, startOfDay } from '../../utils/dates';
 
 /** RFA5: gerir o histórico de reservas (reset). */
@@ -49,14 +49,14 @@ export function ResetHistoryScreen() {
 
   return (
     <Screen>
-      <Card title="Histórico">
+      <Card title="Histórico" icon="archive-outline">
         <InfoRow label="Reservas no total" value={String(data.length)} />
         <InfoRow label="Ativas (nunca apagadas)" value={String(data.length - finished.length)} />
         <InfoRow label="Concluídas / canceladas" value={String(finished.length)} />
       </Card>
-      <Card title="Reset">
+      <Card title="Reset" icon="refresh-outline">
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ color: colors.text, fontWeight: '600' }}>Apenas anteriores a uma data</Text>
+          <Text style={{ color: colors.text, fontFamily: fonts.semibold }}>Apenas anteriores a uma data</Text>
           <Switch value={useDate} onValueChange={setUseDate} />
         </View>
         {useDate && <DateTimeField label="Apagar reservas criadas antes de" mode="date" value={before} onChange={(d) => setBefore(startOfDay(d))} />}

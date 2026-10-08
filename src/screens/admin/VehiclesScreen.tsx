@@ -42,7 +42,7 @@ export function VehiclesScreen() {
               { value: 'todos', label: `Todos (${vehicles.length})` },
             ]}
           />
-          <TextField label="Pesquisar matrícula" value={search} onChangeText={setSearch} autoCapitalize="characters" />
+          <TextField label="Pesquisar matrícula" value={search} onChangeText={setSearch} autoCapitalize="characters" icon="search-outline" />
         </View>
       }
       renderItem={({ item }) => (

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import type { AccountStatus, ReservationKind, ReservationStatus } from '../types';
-import { colors, radius } from '../theme';
+import { colors, fonts, radius } from '../theme';
 
 interface Props {
   label: string;
@@ -8,9 +8,11 @@ interface Props {
   background: string;
 }
 
+/** Etiqueta em pílula com ponto de estado. */
 export function Badge({ label, color, background }: Props) {
   return (
     <View style={[styles.badge, { backgroundColor: background }]}>
+      <View style={[styles.dot, { backgroundColor: color }]} />
       <Text style={[styles.text, { color }]}>{label}</Text>
     </View>
   );
@@ -19,7 +21,7 @@ export function Badge({ label, color, background }: Props) {
 const STATUS: Record<ReservationStatus, Props> = {
   reservada: { label: 'Reservada', color: colors.primary, background: colors.primaryLight },
   no_parque: { label: 'No parque', color: colors.success, background: colors.successLight },
-  concluida: { label: 'Concluída', color: colors.textMuted, background: colors.background },
+  concluida: { label: 'Concluída', color: colors.textMuted, background: colors.surfaceAlt },
   cancelada: { label: 'Cancelada', color: colors.danger, background: colors.dangerLight },
 };
 
@@ -34,7 +36,7 @@ export function StatusBadge({ status }: { status: ReservationStatus }) {
 }
 
 const ACCOUNT: Record<AccountStatus, Props> = {
-  pendente: { label: 'Pendente', color: colors.warning, background: colors.warningLight },
+  pendente: { label: 'Pendente', color: colors.warningDark, background: colors.warningLight },
   ativo: { label: 'Ativo', color: colors.success, background: colors.successLight },
   bloqueado: { label: 'Bloqueado', color: colors.danger, background: colors.dangerLight },
 };
@@ -44,6 +46,7 @@ export function AccountBadge({ status }: { status: AccountStatus }) {
 }
 
 const styles = StyleSheet.create({
-  badge: { borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 3, alignSelf: 'flex-start' },
-  text: { fontSize: 12, fontWeight: '700' },
+  badge: { flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 5, alignSelf: 'flex-start' },
+  dot: { width: 6, height: 6, borderRadius: 3 },
+  text: { fontSize: 12, fontFamily: fonts.semibold },
 });

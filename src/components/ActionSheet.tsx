@@ -1,5 +1,5 @@
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 
 export interface SheetAction {
   label: string;
@@ -21,6 +21,7 @@ export function ActionSheet({ visible, title, message, actions, onClose }: Props
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose} />
       <View style={styles.sheet}>
+        <View style={styles.handle} />
         <Text style={styles.title}>{title}</Text>
         {!!message && <Text style={styles.message}>{message}</Text>}
         {actions.map((a) => (
@@ -44,11 +45,12 @@ export function ActionSheet({ visible, title, message, actions, onClose }: Props
 }
 
 const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)' },
-  sheet: { backgroundColor: colors.surface, padding: spacing.lg, paddingBottom: spacing.xxl, borderTopLeftRadius: 20, borderTopRightRadius: 20, gap: spacing.sm },
-  title: { fontSize: 18, fontWeight: '800', color: colors.text },
+  backdrop: { flex: 1, backgroundColor: 'rgba(11,21,51,0.45)' },
+  handle: { alignSelf: 'center', width: 40, height: 5, borderRadius: 3, backgroundColor: colors.border, marginBottom: spacing.sm },
+  sheet: { backgroundColor: colors.surface, padding: spacing.lg, paddingBottom: spacing.xxl, borderTopLeftRadius: radius.xl, borderTopRightRadius: radius.xl, gap: spacing.sm },
+  title: { fontSize: 18, fontFamily: fonts.extrabold, color: colors.text },
   message: { color: colors.textMuted, marginBottom: spacing.sm },
-  action: { paddingVertical: spacing.md, paddingHorizontal: spacing.md, borderRadius: radius.md, backgroundColor: colors.background },
+  action: { paddingVertical: spacing.md + 2, paddingHorizontal: spacing.lg, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
   cancel: { backgroundColor: 'transparent', alignItems: 'center' },
-  actionText: { fontSize: 16, fontWeight: '600', color: colors.primary },
+  actionText: { fontSize: 16, fontFamily: fonts.semibold, color: colors.primary },
 });

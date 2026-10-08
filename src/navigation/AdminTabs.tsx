@@ -19,7 +19,7 @@ export function AdminTabs() {
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ title: 'Painel', tabBarIcon: tabIcon('speedometer'), tabBarBadge: alertCount || undefined }}
+        options={{ title: 'Painel', headerShown: false, tabBarIcon: tabIcon('speedometer'), tabBarBadge: alertCount || undefined }}
       />
       <Tab.Screen name="StaffPark" component={StaffParkScreen} options={{ title: 'Lugares', tabBarIcon: tabIcon('grid') }} />
       <Tab.Screen name="Reservations" component={ReservationsScreen} options={{ title: 'Reservas', tabBarIcon: tabIcon('list') }} />

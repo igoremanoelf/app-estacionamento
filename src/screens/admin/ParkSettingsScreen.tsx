@@ -11,7 +11,7 @@ import { useSpots } from '../../hooks/data';
 import { errorMessage } from '../../services/auth';
 import { addSpots, deleteSpot, updateParkSettings, updateSpot } from '../../services/parks';
 import type { Spot } from '../../types';
-import { colors, radius, spacing } from '../../theme';
+import { colors, fonts, radius, spacing } from '../../theme';
 import { isValidHHMM } from '../../utils/dates';
 
 /** RFA1: nome do parque, espaços úteis (lugares) e horário de funcionamento. */
@@ -60,7 +60,7 @@ export function ParkSettingsScreen() {
 
   return (
     <Screen>
-      <Card title="Dados do parque">
+      <Card title="Dados do parque" icon="business-outline">
         <TextField label="Nome do parque" value={form.name} onChangeText={(name) => setForm((f) => ({ ...f, name }))} />
         <TextField label="Morada" value={form.address} onChangeText={(address) => setForm((f) => ({ ...f, address }))} />
         <View style={styles.switchRow}>
@@ -83,7 +83,7 @@ export function ParkSettingsScreen() {
         <AppButton title="Guardar" icon="save-outline" onPress={save} loading={busy === 'save'} />
       </Card>
 
-      <Card title="Adicionar lugares">
+      <Card title="Adicionar lugares" icon="add-circle-outline">
         <View style={{ flexDirection: 'row', gap: spacing.sm }}>
           <View style={{ flex: 1 }}>
             <TextField label="Zona" value={zone} onChangeText={(t) => setZone(t.toUpperCase())} autoCapitalize="characters" maxLength={2} />
@@ -95,7 +95,7 @@ export function ParkSettingsScreen() {
         <AppButton title="Criar lugares" icon="add-circle-outline" variant="secondary" onPress={add} loading={busy === 'add'} />
       </Card>
 
-      <Card title={`Lugares (${spots.length})`}>
+      <Card title={`Lugares (${spots.length})`} icon="grid-outline">
         <Text style={styles.muted}>Toque no nome para mudar; o interruptor ativa/desativa o lugar.</Text>
         {zones.map((z) => (
           <View key={z} style={{ gap: spacing.xs }}>
@@ -156,11 +156,11 @@ export function ParkSettingsScreen() {
 
 const styles = StyleSheet.create({
   switchRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  switchLabel: { fontWeight: '600', color: colors.text },
-  muted: { color: colors.textMuted, fontSize: 12 },
-  zone: { fontWeight: '800', color: colors.primary, marginTop: spacing.sm },
+  switchLabel: { fontFamily: fonts.semibold, color: colors.text },
+  muted: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 12 },
+  zone: { fontFamily: fonts.extrabold, color: colors.primary, marginTop: spacing.sm },
   spotRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: 4 },
-  spotCode: { fontWeight: '700', color: colors.text, fontSize: 15 },
+  spotCode: { fontFamily: fonts.bold, color: colors.text, fontSize: 15 },
   modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', padding: spacing.xl },
   modal: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.lg, gap: spacing.sm },
 });

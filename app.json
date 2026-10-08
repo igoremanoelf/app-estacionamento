@@ -14,7 +14,7 @@
     "android": {
       "package": "pt.ipb.estig.parksmart",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#3149DB",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -38,7 +38,18 @@
           "photosPermission": "O acesso às fotos é usado para definir a foto de perfil."
         }
       ],
-      "expo-notifications"
-    ]
+      "expo-notifications",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B1533"
+        }
+      ]
+    ],
+    "primaryColor": "#3B5BFD"
   }
 }

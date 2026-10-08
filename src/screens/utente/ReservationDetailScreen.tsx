@@ -73,7 +73,7 @@ export function ReservationDetailScreen({ route, navigation }: RootScreenProps<'
           <AppButton title="Pagar agora" icon="card-outline" variant="success" loading={busy === 'pay'} onPress={() => run('pay', () => payPending(r), 'Pagamento efetuado.')} />
         </Card>
       )}
-      <Card title="Detalhes" right={<StatusBadge status={r.status} />}>
+      <Card title="Detalhes" icon="information-circle-outline" right={<StatusBadge status={r.status} />}>
         <InfoRow label="Tipo" value={KIND_LABEL[r.kind]} />
         <InfoRow label="Parque" value={r.parkName} />
         <InfoRow label="Lugar" value={r.spotCode} strong />
@@ -98,11 +98,11 @@ export function ReservationDetailScreen({ route, navigation }: RootScreenProps<'
         )}
       </View>
 
-      <Card title="Pagamentos">
+      <Card title="Pagamentos" icon="wallet-outline">
         <PaymentList payments={r.payments} />
       </Card>
       {r.entries.length > 0 && (
-        <Card title="Entradas e saídas">
+        <Card title="Entradas e saídas" icon="swap-horizontal-outline">
           {r.entries
             .slice()
             .reverse()

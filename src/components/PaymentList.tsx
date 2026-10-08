@@ -1,6 +1,7 @@
+import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 import type { Payment, PaymentKind } from '../types';
-import { colors, spacing } from '../theme';
+import { colors, fonts, spacing } from '../theme';
 import { formatDateTime, formatMoney } from '../utils/dates';
 
 const KIND: Record<PaymentKind, string> = {
@@ -20,6 +21,9 @@ export function PaymentList({ payments }: { payments: Payment[] }) {
     <View style={{ gap: spacing.sm }}>
       {payments.map((p) => (
         <View key={p.id} style={styles.row}>
+          <View style={[styles.icon, { backgroundColor: p.amount < 0 ? colors.successLight : colors.primaryLight }]}>
+            <Ionicons name={p.amount < 0 ? 'arrow-undo' : 'receipt-outline'} size={16} color={p.amount < 0 ? colors.success : colors.primary} />
+          </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.kind}>{p.note && p.kind === 'extra' ? p.note : KIND[p.kind]}</Text>
             <Text style={styles.muted}>{formatDateTime(p.createdAt.toDate())}</Text>
@@ -37,9 +41,10 @@ export function PaymentList({ payments }: { payments: Payment[] }) {
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: colors.border },
-  kind: { fontWeight: '600', color: colors.text },
-  muted: { color: colors.textMuted, fontSize: 12 },
-  amount: { fontWeight: '700', color: colors.text },
-  status: { fontSize: 12, fontWeight: '700' },
+  icon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: 8, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: colors.border },
+  kind: { fontFamily: fonts.semibold, color: colors.text },
+  muted: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 12 },
+  amount: { fontFamily: fonts.bold, color: colors.text },
+  status: { fontSize: 12, fontFamily: fonts.bold },
 });

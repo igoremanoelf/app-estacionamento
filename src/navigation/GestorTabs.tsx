@@ -19,7 +19,7 @@ export function GestorTabs() {
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ title: 'Painel', tabBarIcon: tabIcon('speedometer'), tabBarBadge: alertCount || undefined }}
+        options={{ title: 'Painel', headerShown: false, tabBarIcon: tabIcon('speedometer'), tabBarBadge: alertCount || undefined }}
       />
       <Tab.Screen name="StaffPark" component={StaffParkScreen} options={{ title: 'Lugares', tabBarIcon: tabIcon('grid') }} />
       <Tab.Screen name="Scan" component={ScanScreen} options={{ title: 'Ler QR', tabBarIcon: tabIcon('qr-code') }} />

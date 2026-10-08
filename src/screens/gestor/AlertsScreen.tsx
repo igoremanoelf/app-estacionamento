@@ -7,7 +7,7 @@ import { EmptyState } from '../../components/Misc';
 import { useCurrentPark } from '../../context/ParkContext';
 import { useNow, useParkReservations } from '../../hooks/data';
 import type { AlertKind } from '../../types';
-import { colors, spacing } from '../../theme';
+import { colors, fonts, spacing } from '../../theme';
 import { computeAlerts } from '../../utils/alerts';
 import { formatDateTime } from '../../utils/dates';
 
@@ -48,6 +48,6 @@ export function AlertsScreen() {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  text: { color: colors.text, fontWeight: '600' },
-  muted: { color: colors.textMuted, fontSize: 12 },
+  text: { color: colors.text, fontFamily: fonts.semibold },
+  muted: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 12 },
 });

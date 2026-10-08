@@ -37,10 +37,10 @@ export function CreateAccountScreen({ route, navigation }: RootScreenProps<'Crea
   return (
     <Screen>
       <Banner text={role === 'gestor' ? 'A conta de segurança/gestor fica associada a este parque e ativa de imediato.' : 'A conta de utente fica ativa de imediato.'} />
-      <TextField label="Nome" value={form.name} onChangeText={set('name')} />
-      <TextField label="Email" value={form.email} onChangeText={set('email')} autoCapitalize="none" keyboardType="email-address" />
-      <TextField label="Telemóvel" value={form.phone} onChangeText={set('phone')} keyboardType="phone-pad" />
-      <TextField label="Password inicial" value={form.password} onChangeText={set('password')} secureTextEntry />
+      <TextField label="Nome" value={form.name} onChangeText={set('name')} icon="person-outline" />
+      <TextField label="Email" value={form.email} onChangeText={set('email')} autoCapitalize="none" keyboardType="email-address" icon="mail-outline" />
+      <TextField label="Telemóvel" value={form.phone} onChangeText={set('phone')} keyboardType="phone-pad" icon="call-outline" />
+      <TextField label="Password inicial" value={form.password} onChangeText={set('password')} secureTextEntry icon="lock-closed-outline" />
       {!!error && <Banner tone="danger" text={error} />}
       <AppButton title="Criar conta" icon="person-add-outline" onPress={submit} loading={busy} />
     </Screen>

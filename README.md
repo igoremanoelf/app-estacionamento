@@ -3,6 +3,8 @@
 Projeto de **Desenvolvimento Multiplataforma** (LEI 2026/2027, turno C).
 App mobile em **React Native (Expo SDK 57, TypeScript)** com **Firebase** (Authentication, Cloud Firestore e, opcionalmente, Storage), como exige o RNF1.
 
+![ParkSmart](design/redesign/overview.png)
+
 > Branch a avaliar: `main`. As versões avaliadas são marcadas com as tags `Figma`, `Componentes`, `Backend` e `Final`.
 
 ---
@@ -161,12 +163,23 @@ src/
   hooks/                useQueryData/useDocData (onSnapshot), hooks de dados, notificações
   services/             auth, users, parks, reservations, gate (cancela), notifications
   utils/                lógica pura e testada: preços, disponibilidade, datas, alertas, estatísticas, QR
-  components/           componentes reutilizáveis
+  theme/                design system (cores, degradês, tipografia, sombras)
+  components/           componentes reutilizáveis (Logo, HeroHeader, AppButton, ParkMap, QRTicket...)
   navigation/           Stack raiz + Tabs por perfil
   screens/              auth/, common/, utente/, gestor/, admin/
 scripts/seed.mjs        criação de parque + administrador (Firebase Admin SDK)
+scripts/brand-assets.mjs  gera ícones e splash a partir do logótipo
 firestore.rules         regras de segurança
 ```
+
+### Identidade visual e design system
+
+- **Logótipo**: pino de localização com um "P" sobre um azulejo em degradê índigo (`src/components/Logo.tsx`, SVG em `design/brand/`). O ícone da app, o ícone adaptativo do Android, o favicon e o splash são gerados com `node scripts/brand-assets.mjs` (usa o Playwright/Chromium para rasterizar o SVG).
+- **Paleta** (`src/theme`): índigo `#3B5BFD` (marca), azul-noite `#0B1533` (cabeçalhos e splash), menta `#12C29B` (livre/sucesso), âmbar (reservado) e coral (ocupado/erro), com neutros em ardósia.
+- **Tipografia**: Inter (400 a 800) carregada com `expo-font`; o splash fica visível até as fontes estarem prontas.
+- **Componentes**: botões em degradê com feedback tátil, campos com ícone e estado de foco, cartões com sombra suave, cabeçalho `HeroHeader`, anel de ocupação, bilhete com QR Code e mapa do parque desenhado como asfalto com marcações.
+
+Capturas de ecrã em `design/redesign/`.
 
 ## 6. Teste rápido do fluxo completo
 1. Entrar como **utente** → *Reservar* → escolher veículo, período e um lugar verde no mapa → *Confirmar e pagar*. Aparece o bilhete com o QR.

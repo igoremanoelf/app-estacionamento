@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { VEHICLE_TYPES, type UserVehicle, type VehicleType } from '../types';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 import { normalizePlate } from '../utils/plate';
 import { TextField } from './TextField';
 
@@ -56,14 +56,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    borderWidth: 1,
-    borderColor: colors.primary,
+    backgroundColor: colors.primaryLight,
     borderRadius: radius.pill,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
   },
   chipActive: { backgroundColor: colors.primary },
-  chipText: { color: colors.primary, fontWeight: '700' },
+  chipText: { color: colors.primary, fontFamily: fonts.bold },
   types: { flexDirection: 'row', gap: spacing.sm },
   type: {
     flex: 1,
@@ -72,9 +71,9 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderRadius: radius.md,
     borderWidth: 1.5,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
+    borderColor: 'transparent',
+    backgroundColor: colors.surfaceAlt,
   },
-  typeActive: { borderColor: colors.primary, backgroundColor: colors.primaryLight },
-  typeText: { fontWeight: '600', color: colors.textMuted },
+  typeActive: { borderColor: colors.primary, backgroundColor: colors.surface },
+  typeText: { fontFamily: fonts.semibold, color: colors.textMuted },
 });
