@@ -1,4 +1,4 @@
-import { query, where } from 'firebase/firestore';
+import { query, where } from '../data/db';
 import { useEffect, useMemo, useRef } from 'react';
 import { refs } from '../services/firestore';
 import { cancelScheduled, configureNotifications, ensurePermission, notifyLocal, scheduleAt } from '../services/notifications';

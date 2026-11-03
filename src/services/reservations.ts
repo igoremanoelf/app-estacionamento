@@ -8,8 +8,8 @@ import {
   where,
   writeBatch,
   type WriteBatch,
-} from 'firebase/firestore';
-import { db } from '../config/firebase';
+  db,
+} from '../data/db';
 import type { Park, Payment, PaymentKind, PaymentStatus, Reservation, ReservationKind, Spot, UserProfile, VehicleType } from '../types';
 import { busySpotIds, type SpotInterval } from '../utils/availability';
 import { isWithinOpeningHours, monthBounds } from '../utils/dates';

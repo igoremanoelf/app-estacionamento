@@ -1,8 +1,9 @@
-import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { arrayRemove, arrayUnion, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-import { getSecondaryAuth, storage, useStorageForPhotos } from '../config/firebase';
+import { firebaseStorage, useStorageForPhotos as storageEnabled } from '../config/firebase';
+import { authBackend } from '../data/auth';
+import { arrayRemove, arrayUnion, serverTimestamp, setDoc, updateDoc } from '../data/db';
+import { isLocalMode } from '../data/mode';
 import type { AccountStatus, Role, UserProfile, UserVehicle } from '../types';
 import { refs } from './firestore';
 
@@ -32,7 +33,7 @@ export async function removeUserVehicle(uid: string, v: UserVehicle): Promise<vo
 
 /**
  * RFG0/RFA2: o administrador cria contas de gestores (ou utentes) já ativas.
- * Usa uma instância secundária do Firebase Auth para não perder a sessão atual.
+ * No Firebase usa uma instância secundária do Auth para não perder a sessão atual.
  */
 export async function createAccountByAdmin(data: {
   name: string;
@@ -42,24 +43,22 @@ export async function createAccountByAdmin(data: {
   role: Exclude<Role, 'admin'>;
   parkId: string;
 }): Promise<void> {
-  const secondary = getSecondaryAuth();
-  const cred = await createUserWithEmailAndPassword(secondary, data.email.trim(), data.password);
-  try {
-    await setDoc(refs.user(cred.user.uid), {
-      name: data.name.trim(),
-      email: data.email.trim().toLowerCase(),
-      phone: data.phone.trim(),
-      photoURL: null,
-      role: data.role,
-      status: 'ativo',
-      parkId: data.parkId,
-      vehicles: [],
-      createdAt: serverTimestamp(),
-    });
-  } finally {
-    await signOut(secondary);
-  }
+  const user = await authBackend.createAccount(data.email.trim(), data.password);
+  await setDoc(refs.user(user.uid), {
+    name: data.name.trim(),
+    email: data.email.trim().toLowerCase(),
+    phone: data.phone.trim(),
+    photoURL: null,
+    role: data.role,
+    status: 'ativo',
+    parkId: data.parkId,
+    vehicles: [],
+    createdAt: serverTimestamp(),
+  });
 }
+
+/** No modo local a foto fica sempre no próprio documento (base64). */
+const useStorageForPhotos = storageEnabled && !isLocalMode;
 
 /**
  * Upload da foto de perfil. Usa o Firebase Storage quando configurado
@@ -81,7 +80,7 @@ export async function pickAndUploadPhoto(uid: string): Promise<string | null> {
   let url: string;
   if (useStorageForPhotos) {
     const blob = await (await fetch(asset.uri)).blob();
-    const fileRef = ref(storage, `avatars/${uid}.jpg`);
+    const fileRef = ref(firebaseStorage(), `avatars/${uid}.jpg`);
     await uploadBytes(fileRef, blob, { contentType: 'image/jpeg' });
     url = await getDownloadURL(fileRef);
   } else {

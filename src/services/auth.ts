@@ -1,32 +1,23 @@
-import {
-  EmailAuthProvider,
-  createUserWithEmailAndPassword,
-  reauthenticateWithCredential,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signOut,
-  updatePassword,
-} from 'firebase/auth';
-import { serverTimestamp, setDoc } from 'firebase/firestore';
-import { auth } from '../config/firebase';
+import { serverTimestamp, setDoc } from '../data/db';
+import { authBackend } from '../data/auth';
 import { refs } from './firestore';
 
 export async function login(email: string, password: string): Promise<void> {
-  await signInWithEmailAndPassword(auth, email.trim(), password);
+  await authBackend.signIn(email.trim(), password);
 }
 
 export async function logout(): Promise<void> {
-  await signOut(auth);
+  await authBackend.signOut();
 }
 
 export async function resetPassword(email: string): Promise<void> {
-  await sendPasswordResetEmail(auth, email.trim());
+  await authBackend.sendPasswordReset(email.trim());
 }
 
 /** RFC0: registo de um utente. Fica "pendente" até ser validado por um gestor (RFG2a). */
 export async function registerUtente(data: { name: string; email: string; phone: string; password: string; parkId: string }): Promise<void> {
-  const cred = await createUserWithEmailAndPassword(auth, data.email.trim(), data.password);
-  await setDoc(refs.user(cred.user.uid), {
+  const user = await authBackend.register(data.email.trim(), data.password);
+  await setDoc(refs.user(user.uid), {
     name: data.name.trim(),
     email: data.email.trim().toLowerCase(),
     phone: data.phone.trim(),
@@ -40,10 +31,7 @@ export async function registerUtente(data: { name: string; email: string; phone:
 }
 
 export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
-  const user = auth.currentUser;
-  if (!user?.email) throw new Error('Sessão inválida.');
-  await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, currentPassword));
-  await updatePassword(user, newPassword);
+  await authBackend.changePassword(currentPassword, newPassword);
 }
 
 const AUTH_ERRORS: Record<string, string> = {
@@ -57,6 +45,7 @@ const AUTH_ERRORS: Record<string, string> = {
   'auth/network-request-failed': 'Sem ligação à internet.',
   'auth/requires-recent-login': 'Volte a iniciar sessão para alterar a password.',
   'permission-denied': 'Não tem permissão para esta operação.',
+  'not-found': 'O registo já não existe.',
 };
 
 export function errorMessage(e: unknown): string {

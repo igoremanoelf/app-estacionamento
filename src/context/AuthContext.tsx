@@ -1,13 +1,12 @@
-import { onAuthStateChanged, type User } from 'firebase/auth';
-import { onSnapshot } from 'firebase/firestore';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { auth } from '../config/firebase';
+import { authBackend, type SessionUser } from '../data/auth';
+import { onSnapshot } from '../data/db';
 import { fromSnap, refs } from '../services/firestore';
 import { registerPushToken } from '../services/notifications';
 import type { UserProfile } from '../types';
 
 interface AuthState {
-  user: User | null;
+  user: SessionUser | null;
   profile: UserProfile | null;
   /** true enquanto não se sabe se há sessão ou enquanto o perfil carrega */
   loading: boolean;
@@ -20,7 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let unsubProfile: (() => void) | undefined;
-    const unsubAuth = onAuthStateChanged(auth, (user) => {
+    const unsubAuth = authBackend.subscribe((user) => {
       unsubProfile?.();
       unsubProfile = undefined;
       if (!user) {

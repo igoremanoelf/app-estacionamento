@@ -13,7 +13,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from './src/context/AuthContext';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { configureNotifications } from './src/services/notifications';
+import { installWebAlert } from './src/utils/webAlert';
 
+installWebAlert();
 configureNotifications();
 SplashScreen.preventAutoHideAsync().catch(() => {});
 

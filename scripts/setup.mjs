@@ -144,6 +144,7 @@ async function firebaseSetup() {
   writeFileSync(
     envPath,
     [
+      `EXPO_PUBLIC_DATA_MODE=${keep('EXPO_PUBLIC_DATA_MODE', 'local')}`,
       `EXPO_PUBLIC_FIREBASE_API_KEY=${sdkConfig.apiKey}`,
       `EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=${sdkConfig.authDomain}`,
       `EXPO_PUBLIC_FIREBASE_PROJECT_ID=${sdkConfig.projectId}`,
