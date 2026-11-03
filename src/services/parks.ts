@@ -1,5 +1,4 @@
-import { getDocs, query, updateDoc, where, writeBatch } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db, getDocs, query, updateDoc, where, writeBatch } from '../data/db';
 import type { Park, Prices, Spot } from '../types';
 import { refs } from './firestore';
 

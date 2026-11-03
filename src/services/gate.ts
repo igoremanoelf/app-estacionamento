@@ -1,5 +1,4 @@
-import { Timestamp, increment, runTransaction } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { Timestamp, db, increment, runTransaction } from '../data/db';
 import type { Park, Payment, Reservation, StayEntry } from '../types';
 import { EXIT_TOLERANCE } from '../utils/alerts';
 import { formatDateTime, formatMoney, isWithinOpeningHours, MINUTE } from '../utils/dates';

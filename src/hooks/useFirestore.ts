@@ -1,4 +1,4 @@
-import { onSnapshot, type DocumentReference, type Query } from 'firebase/firestore';
+import { onSnapshot, type DocumentReference, type Query } from '../data/db';
 import { useEffect, useState, type DependencyList } from 'react';
 import { fromSnap } from '../services/firestore';
 

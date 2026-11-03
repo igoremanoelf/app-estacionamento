@@ -9,7 +9,28 @@ App mobile em **React Native (Expo SDK 57, TypeScript)** com **Firebase** (Authe
 
 ---
 
-## 1. Como executar
+## 0. Arranque rápido (modo local, sem Firebase)
+
+A app arranca por omissão em **modo local**: todos os dados (parques, lugares, reservas, pagamentos e contas) ficam numa base de dados no próprio dispositivo, já preenchida com dados de demonstração. Não é preciso `.env` nem projeto Firebase.
+
+```bash
+npm install
+npx expo start
+```
+
+No ecrã de entrada há atalhos para as contas de demonstração:
+
+| Perfil | Email | Password |
+|---|---|---|
+| Utente | `utente@parque.pt` | `demo1234` |
+| Gestor | `gestor@parque.pt` | `demo1234` |
+| Administrador | `admin@parque.pt` | `admin123` |
+
+Outras contas: `joao@parque.pt`, `sofia@parque.pt` (utentes), `rui@parque.pt` (gestor), `carlos@parque.pt` e `beatriz@parque.pt` (registos pendentes), `admin.estacao@parque.pt` (administrador do segundo parque). Em *Perfil → Repor dados iniciais* volta-se ao estado inicial.
+
+Para usar o Firebase, pôr `EXPO_PUBLIC_DATA_MODE=firebase` no `.env` e seguir a secção 1. O relatório desta entrega está em [`docs/RELATORIO-Componentes.md`](docs/RELATORIO-Componentes.md).
+
+## 1. Como executar (modo Firebase)
 
 ### Requisitos
 - Node.js 20+ e npm
@@ -161,6 +182,8 @@ src/
   config/firebase.ts    inicialização do Firebase (auth persistente com AsyncStorage)
   context/              AuthContext (sessão + perfil em tempo real), ParkContext (parque atual)
   hooks/                useQueryData/useDocData (onSnapshot), hooks de dados, notificações
+  data/                 camada de dados: db.ts e auth.ts escolhem entre Firebase e a base local
+    local/              base de dados local (store.ts), contas locais (auth.ts) e dados de demonstração (seed.ts)
   services/             auth, users, parks, reservations, gate (cancela), notifications
   utils/                lógica pura e testada: preços, disponibilidade, datas, alertas, estatísticas, QR
   theme/                design system (cores, degradês, tipografia, sombras)

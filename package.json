@@ -41,7 +41,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "tsx --test src/utils/__tests__/*.test.ts",
+    "test": "tsx --test src/utils/__tests__/*.test.ts src/data/local/__tests__/*.test.ts",
     "typecheck": "tsc --noEmit",
     "seed": "node scripts/seed.mjs",
     "setup": "node scripts/setup.mjs"

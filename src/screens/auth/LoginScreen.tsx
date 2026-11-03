@@ -8,7 +8,9 @@ import { useLightStatusBar } from '../../components/Hero';
 import { LogoMark } from '../../components/Logo';
 import { Banner } from '../../components/Misc';
 import { TextField } from '../../components/TextField';
+import { DemoAccounts } from '../../components/DemoPanel';
 import { isFirebaseConfigured } from '../../config/firebase';
+import { isLocalMode } from '../../data/mode';
 import type { RootScreenProps } from '../../navigation/types';
 import { errorMessage, login, resetPassword } from '../../services/auth';
 import { colors, fonts, gradients, radius, spacing } from '../../theme';
@@ -66,7 +68,17 @@ export function LoginScreen({ navigation }: RootScreenProps<'Login'>) {
             <Text style={styles.h1}>Bem-vindo de volta</Text>
             <Text style={styles.sub}>Entre com a sua conta para continuar.</Text>
           </View>
-          {!isFirebaseConfigured && <Banner tone="warning" text="Firebase não configurado: crie o ficheiro .env a partir de .env.example." />}
+          {isLocalMode ? (
+            <DemoAccounts
+              onPick={(e, p) => {
+                setEmail(e);
+                setPassword(p);
+                setError(null);
+              }}
+            />
+          ) : (
+            !isFirebaseConfigured && <Banner tone="warning" text="Firebase não configurado: crie o ficheiro .env a partir de .env.example." />
+          )}
           <TextField label="Email" icon="mail-outline" placeholder="nome@exemplo.pt" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" autoComplete="email" />
           <TextField label="Password" icon="lock-closed-outline" placeholder="••••••••" value={password} onChangeText={setPassword} secureTextEntry autoComplete="password" />
           <Pressable onPress={forgot} hitSlop={8} style={{ alignSelf: 'flex-end', marginTop: -4 }}>

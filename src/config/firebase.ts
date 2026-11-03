@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, initializeAuth, type Auth, type Persistence } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getStorage, type FirebaseStorage } from 'firebase/storage';
 import { Platform } from 'react-native';
 
 export const firebaseConfig = {
@@ -17,10 +17,23 @@ export const firebaseConfig = {
 export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
 export const useStorageForPhotos = process.env.EXPO_PUBLIC_USE_STORAGE === 'true';
 
-export const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
+/*
+ * O Firebase só é inicializado quando é usado (modo "firebase"). No modo local
+ * a app nunca chama estas funções, por isso funciona sem .env.
+ */
+let _app: FirebaseApp | null = null;
+let _auth: Auth | null = null;
+let _db: Firestore | null = null;
+let _storage: FirebaseStorage | null = null;
 
-function createAuth(): Auth {
-  if (Platform.OS === 'web') return getAuth(app);
+export function firebaseApp(): FirebaseApp {
+  return (_app ??= getApps().length ? getApp() : initializeApp(firebaseConfig));
+}
+
+export function firebaseAuth(): Auth {
+  if (_auth) return _auth;
+  const app = firebaseApp();
+  if (Platform.OS === 'web') return (_auth = getAuth(app));
   // getReactNativePersistence só existe no bundle "react-native" do firebase/auth,
   // que o Metro resolve automaticamente; os tipos públicos não o declaram.
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -28,16 +41,21 @@ function createAuth(): Auth {
     getReactNativePersistence: (storage: typeof AsyncStorage) => Persistence;
   };
   try {
-    return initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
+    _auth = initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
   } catch {
     // fast refresh: o auth já foi inicializado
-    return getAuth(app);
+    _auth = getAuth(app);
   }
+  return _auth;
 }
 
-export const auth = createAuth();
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+export function firebaseDb(): Firestore {
+  return (_db ??= getFirestore(firebaseApp()));
+}
+
+export function firebaseStorage(): FirebaseStorage {
+  return (_storage ??= getStorage(firebaseApp()));
+}
 
 /**
  * App Firebase secundária usada pelo administrador para criar contas de

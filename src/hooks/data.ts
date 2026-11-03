@@ -1,4 +1,4 @@
-import { query, where } from 'firebase/firestore';
+import { query, where } from '../data/db';
 import { useEffect, useMemo, useState } from 'react';
 import { refs } from '../services/firestore';
 import type { Booking, Park, ParkVehicle, Reservation, Role, Spot, UserProfile } from '../types';

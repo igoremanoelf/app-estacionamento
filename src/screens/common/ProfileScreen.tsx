@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '../../components/AppButton';
 import { Card } from '../../components/Card';
+import { DemoResetCard } from '../../components/DemoPanel';
 import { HeroHeader, HeroPill } from '../../components/Hero';
 import { Avatar, Banner, ListItem } from '../../components/Misc';
 import { Screen } from '../../components/Screen';
 import { TextField } from '../../components/TextField';
 import { useProfile } from '../../context/AuthContext';
+import { isLocalMode } from '../../data/mode';
 import { changePassword, errorMessage, logout } from '../../services/auth';
 import { pickAndUploadPhoto, removeUserVehicle, updateUserProfile } from '../../services/users';
 import { VEHICLE_TYPES } from '../../types';
@@ -137,6 +139,8 @@ export function ProfileScreen() {
         <TextField label="Confirmar nova password" icon="shield-checkmark-outline" value={pw.confirm} onChangeText={(t) => setPw((p) => ({ ...p, confirm: t }))} secureTextEntry />
         <AppButton title="Alterar password" variant="secondary" icon="key-outline" onPress={savePassword} loading={pwBusy} />
       </Card>
+
+      {isLocalMode && <DemoResetCard />}
 
       <AppButton title="Terminar sessão" variant="danger" icon="log-out-outline" onPress={logout} />
     </Screen>

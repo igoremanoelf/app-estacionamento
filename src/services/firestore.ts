@@ -1,5 +1,4 @@
-import { collection, doc, type DocumentData, type DocumentSnapshot, type QueryDocumentSnapshot } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { collection, db, doc, type DocumentData, type DocumentSnapshot, type QueryDocumentSnapshot } from '../data/db';
 
 export function fromSnap<T extends { id: string }>(snap: QueryDocumentSnapshot<DocumentData> | DocumentSnapshot<DocumentData>): T {
   return { id: snap.id, ...(snap.data() as Omit<T, 'id'>) } as T;

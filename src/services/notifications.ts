@@ -1,7 +1,8 @@
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import { getDoc, updateDoc } from 'firebase/firestore';
+import { getDoc, updateDoc } from '../data/db';
+import { isLocalMode } from '../data/mode';
 import { AppState, Platform } from 'react-native';
 import { refs } from './firestore';
 
@@ -41,7 +42,7 @@ export async function ensurePermission(): Promise<boolean> {
 /** Regista o token Expo Push do dispositivo no perfil do utilizador (push remoto entre utilizadores). */
 export async function registerPushToken(uid: string): Promise<void> {
   try {
-    if (!Device.isDevice || !(await ensurePermission())) return;
+    if (isLocalMode || !Device.isDevice || !(await ensurePermission())) return;
     const projectId =
       process.env.EXPO_PUBLIC_EAS_PROJECT_ID ||
       (Constants.expoConfig?.extra as { eas?: { projectId?: string } } | undefined)?.eas?.projectId;
